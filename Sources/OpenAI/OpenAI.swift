@@ -201,7 +201,7 @@ extension OpenAI {
         var components = URLComponents()
         components.scheme = "https"
         components.host = configuration.host
-        let path = self.routeVersion + path
+        let path = routeVersion + path
         components.path = path
         return components.url!
     }
