@@ -26,11 +26,15 @@ final public class OpenAI: OpenAIProtocol {
         /// Default request timeout
         public var timeoutInterval: TimeInterval
         
-        public init(token: String, organizationIdentifier: String? = nil, host: String = "api.openai.com", timeoutInterval: TimeInterval = 60.0) {
+        /// Custom path before default path
+        public var customPath: String?
+        
+        public init(token: String, organizationIdentifier: String? = nil, host: String = "api.openai.com", timeoutInterval: TimeInterval = 60.0, customPath: String? = nil) {
             self.token = token
             self.organizationIdentifier = organizationIdentifier
             self.host = host
             self.timeoutInterval = timeoutInterval
+            self.customPath = customPath
         }
     }
     
@@ -197,7 +201,7 @@ extension OpenAI {
         var components = URLComponents()
         components.scheme = "https"
         components.host = configuration.host
-        components.path = path
+        components.path = (configuration.customPath ?? "") + path
         return components.url!
     }
 }
@@ -224,3 +228,4 @@ extension APIPath {
         self + "/" + path
     }
 }
+ 
