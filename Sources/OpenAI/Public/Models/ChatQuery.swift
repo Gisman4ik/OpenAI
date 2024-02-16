@@ -178,7 +178,7 @@ public struct ChatQuery: Equatable, Codable, Streamable {
         public init?(
             role: Role,
             content: String? = nil,
-            imageUrl: URL? = nil,
+            imageUrl: String? = nil,
             name: String? = nil,
             toolCalls: [Self.ChatCompletionAssistantMessageParam.ChatCompletionMessageToolCallParam]? = nil,
             toolCallId: String? = nil
@@ -194,7 +194,7 @@ public struct ChatQuery: Equatable, Codable, Streamable {
                 if let content {
                     self = .user(.init(content: .init(string: content), name: name))
                 } else if let imageUrl {
-                    self = .user(.init(content: .init(chatCompletionContentPartImageParam: .init(imageUrl: .init(url: imageUrl.absoluteString, detail: .auto))), name: name))
+                    self = .user(.init(content: .init(chatCompletionContentPartImageParam: .init(imageUrl: .init(url: imageUrl, detail: .auto))), name: name))
                 } else {
                     return nil
                 }
