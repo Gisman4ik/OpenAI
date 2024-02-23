@@ -409,9 +409,9 @@ public struct ChatQuery: Equatable, Codable, Streamable {
                     var container = encoder.singleValueContainer()
                     switch self {
                     case .chatCompletionContentPartTextParam(let a0):
-                        try container.encode([a0])
+                        try container.encode(a0)
                     case .chatCompletionContentPartImageParam(let a0):
-                        try container.encode([a0])
+                        try container.encode(a0)
                     }
                 }
 
