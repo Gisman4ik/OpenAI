@@ -1,6 +1,6 @@
 //
 //  JSONRequest.swift
-//  
+//
 //
 //  Created by Sergii Kryvoblotskyi on 12/19/22.
 //
@@ -25,10 +25,11 @@ final class JSONRequest<ResultType> {
 
 extension JSONRequest: URLRequestBuildable {
     
-    func build(token: String, organizationIdentifier: String?, timeoutInterval: TimeInterval) throws -> URLRequest {
+    func build(token: String, appchecktoken: String, organizationIdentifier: String?, timeoutInterval: TimeInterval) throws -> URLRequest {
         var request = URLRequest(url: url, timeoutInterval: timeoutInterval)
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        request.setValue(appchecktoken, forHTTPHeaderField: "User-Auth-ID")
         // TODO: ONLY PASS IF ASSISTANTS API
         request.setValue("assistants=v1", forHTTPHeaderField: "OpenAI-Beta")
 

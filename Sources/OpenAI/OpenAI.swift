@@ -16,6 +16,7 @@ final public class OpenAI: OpenAIProtocol {
         
         /// OpenAI API token. See https://platform.openai.com/docs/api-reference/authentication
         public var token: String
+        public var appcheckToken: String
         
         /// Optional OpenAI organization identifier. See https://platform.openai.com/docs/api-reference/authentication
         public var organizationIdentifier: String?
@@ -29,8 +30,9 @@ final public class OpenAI: OpenAIProtocol {
         /// Custom path before default path
         public var customPath: String?
         
-        public init(token: String, organizationIdentifier: String? = nil, host: String = "api.openai.com", timeoutInterval: TimeInterval = 60.0, customPath: String? = nil) {
+        public init(token: String, appcheckToken: String, organizationIdentifier: String? = nil, host: String = "api.openai.com", timeoutInterval: TimeInterval = 60.0, customPath: String? = nil) {
             self.token = token
+            self.appcheckToken = appcheckToken
             self.organizationIdentifier = organizationIdentifier
             self.host = host
             self.timeoutInterval = timeoutInterval
@@ -43,8 +45,8 @@ final public class OpenAI: OpenAIProtocol {
     
     public var configuration: Configuration
 
-    public convenience init(apiToken: String) {
-        self.init(configuration: Configuration(token: apiToken), session: URLSession.shared)
+    public convenience init(apiToken: String, appcheckToken: String) {
+        self.init(configuration: Configuration(token: apiToken, appcheckToken: appcheckToken), session: URLSession.shared)
     }
     
     public convenience init(configuration: Configuration) {
@@ -177,7 +179,8 @@ extension OpenAI {
 
     func performRequest<ResultType: Codable>(request: any URLRequestBuildable, completion: @escaping (Result<ResultType, Error>) -> Void) {
         do {
-            let request = try request.build(token: configuration.token, 
+            let request = try request.build(token: configuration.token,
+                                            appchecktoken: configuration.appcheckToken,
                                             organizationIdentifier: configuration.organizationIdentifier,
                                             timeoutInterval: configuration.timeoutInterval)
             let task = session.dataTask(with: request) { data, _, error in
@@ -202,7 +205,8 @@ extension OpenAI {
     
     func performStreamingRequest<ResultType: Codable>(request: any URLRequestBuildable, onResult: @escaping (Result<ResultType, Error>) -> Void, completion: ((Error?) -> Void)?) {
         do {
-            let request = try request.build(token: configuration.token, 
+            let request = try request.build(token: configuration.token,
+                                            appchecktoken: configuration.appcheckToken,
                                             organizationIdentifier: configuration.organizationIdentifier,
                                             timeoutInterval: configuration.timeoutInterval)
             let session = StreamingSession<ResultType>(urlRequest: request)
@@ -225,7 +229,8 @@ extension OpenAI {
     
     func performSpeechRequest(request: any URLRequestBuildable, completion: @escaping (Result<AudioSpeechResult, Error>) -> Void) {
         do {
-            let request = try request.build(token: configuration.token, 
+            let request = try request.build(token: configuration.token,
+                                            appchecktoken: configuration.appcheckToken,
                                             organizationIdentifier: configuration.organizationIdentifier,
                                             timeoutInterval: configuration.timeoutInterval)
             

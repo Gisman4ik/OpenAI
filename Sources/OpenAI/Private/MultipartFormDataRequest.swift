@@ -1,6 +1,6 @@
 //
 //  MultipartFormDataRequest.swift
-//  
+//
 //
 //  Created by Sergii Kryvoblotskyi on 02/04/2023.
 //
@@ -25,12 +25,13 @@ final class MultipartFormDataRequest<ResultType> {
 
 extension MultipartFormDataRequest: URLRequestBuildable {
     
-    func build(token: String, organizationIdentifier: String?, timeoutInterval: TimeInterval) throws -> URLRequest {
+    func build(token: String, appchecktoken: String, organizationIdentifier: String?, timeoutInterval: TimeInterval) throws -> URLRequest {
         var request = URLRequest(url: url)
         let boundary: String = UUID().uuidString
         request.timeoutInterval = timeoutInterval
         request.httpMethod = method
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        request.setValue(appchecktoken, forHTTPHeaderField: "User-Auth-ID")
         request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
         if let organizationIdentifier {
             request.setValue(organizationIdentifier, forHTTPHeaderField: "OpenAI-Organization")

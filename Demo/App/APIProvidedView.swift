@@ -28,24 +28,24 @@ struct APIProvidedView: View {
         self._apiKey = apiKey
         self._chatStore = StateObject(
             wrappedValue: ChatStore(
-                openAIClient: OpenAI(apiToken: apiKey.wrappedValue),
+                openAIClient: OpenAI(apiToken: apiKey.wrappedValue, appcheckToken: ""),
                 idProvider: idProvider
             )
         )
         self._imageStore = StateObject(
             wrappedValue: ImageStore(
-                openAIClient: OpenAI(apiToken: apiKey.wrappedValue)
+                openAIClient: OpenAI(apiToken: apiKey.wrappedValue, appcheckToken: "")
             )
         )
         self._assistantStore = StateObject(
             wrappedValue: AssistantStore(
-                openAIClient: OpenAI(apiToken: apiKey.wrappedValue),
+                openAIClient: OpenAI(apiToken: apiKey.wrappedValue, appcheckToken: ""),
                 idProvider: idProvider
             )
         )
         self._miscStore = StateObject(
             wrappedValue: MiscStore(
-                openAIClient: OpenAI(apiToken: apiKey.wrappedValue)
+                openAIClient: OpenAI(apiToken: apiKey.wrappedValue, appcheckToken: "")
             )
         )
     }
@@ -58,7 +58,7 @@ struct APIProvidedView: View {
             miscStore: miscStore
         )
         .onChange(of: apiKey) { newApiKey in
-            let client = OpenAI(apiToken: newApiKey)
+            let client = OpenAI(apiToken: newApiKey, appcheckToken: "")
             chatStore.openAIClient = client
             imageStore.openAIClient = client
             assistantStore.openAIClient = client

@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Sergii Kryvoblotskyi on 02/04/2023.
 //
@@ -14,5 +14,5 @@ protocol URLRequestBuildable {
     
     associatedtype ResultType
     
-    func build(token: String, organizationIdentifier: String?, timeoutInterval: TimeInterval) throws -> URLRequest
+    func build(token: String, appchecktoken: String, organizationIdentifier: String?, timeoutInterval: TimeInterval) throws -> URLRequest
 }
