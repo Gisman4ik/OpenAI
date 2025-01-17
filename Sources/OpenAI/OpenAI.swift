@@ -22,7 +22,9 @@ final public class OpenAI: OpenAIProtocol {
         public var organizationIdentifier: String?
         
         /// API host. Set this property if you use some kind of proxy or your own server. Default is api.openai.com
-        public var host: String
+        public let host: String
+        public let port: Int
+        public let scheme: String
         
         /// Default request timeout
         public var timeoutInterval: TimeInterval
@@ -30,11 +32,13 @@ final public class OpenAI: OpenAIProtocol {
         /// Custom path before default path
         public var customPath: String?
         
-        public init(token: String, appcheckToken: String, organizationIdentifier: String? = nil, host: String = "api.openai.com", timeoutInterval: TimeInterval = 60.0, customPath: String? = nil) {
+        public init(token: String, appcheckToken: String, organizationIdentifier: String? = nil, host: String = "api.openai.com", port: Int = 443, scheme: String = "https", timeoutInterval: TimeInterval = 60.0, customPath: String? = nil) {
             self.token = token
             self.appcheckToken = appcheckToken
             self.organizationIdentifier = organizationIdentifier
             self.host = host
+            self.port = port
+            self.scheme = scheme
             self.timeoutInterval = timeoutInterval
             self.customPath = customPath
         }
@@ -255,9 +259,10 @@ extension OpenAI {
     
     func buildURL(path: String, after: String? = nil) -> URL {
         var components = URLComponents()
-        components.scheme = "https"
+        components.scheme = configuration.scheme
         components.host = configuration.host
         components.path = (configuration.customPath ?? "") + path
+        components.port = configuration.port
         if let after {
             components.queryItems = [URLQueryItem(name: "after", value: after)]
         }
@@ -268,7 +273,8 @@ extension OpenAI {
         var components = URLComponents()
         components.scheme = "https"
         components.host = configuration.host
-        components.path = path.replacingOccurrences(of: "THREAD_ID", with: threadId)
+        components.path = ((configuration.customPath ?? "") + path).replacingOccurrences(of: "THREAD_ID", with: threadId)
+        components.port = configuration.port
         if let before {
             components.queryItems = [URLQueryItem(name: "before", value: before)]
         }
@@ -279,8 +285,9 @@ extension OpenAI {
         var components = URLComponents()
         components.scheme = "https"
         components.host = configuration.host
-        components.path = path.replacingOccurrences(of: "THREAD_ID", with: threadId)
+        components.path = ((configuration.customPath ?? "") + path).replacingOccurrences(of: "THREAD_ID", with: threadId)
                               .replacingOccurrences(of: "RUN_ID", with: runId)
+        components.port = configuration.port
         if let before {
             components.queryItems = [URLQueryItem(name: "before", value: before)]
         }
@@ -291,7 +298,9 @@ extension OpenAI {
         var components = URLComponents()
         components.scheme = "https"
         components.host = configuration.host
-        components.path = path.replacingOccurrences(of: "ASST_ID", with: assistantId)
+        components.path = ((configuration.customPath ?? "") + path).replacingOccurrences(of: "ASST_ID", with: assistantId)
+        components.port = configuration.port
+        components.path = path
         return components.url!
     }
 }
